@@ -1,0 +1,15 @@
+# Godot files
+/.import/
+export_presets.cfg
+/src/godot_headers
+/src/godot-cpp
+
+# C# shit
+.mono/
+
+# cmake build folder
+/build/
+
+# scons build stuff
+*.os
+.sconsign.dblite
