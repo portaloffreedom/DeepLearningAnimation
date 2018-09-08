@@ -1,0 +1,55 @@
+diff --git a/src/animation/controller.cpp b/src/animation/controller.cpp
+index e4525a6..9e92ec2 100644
+--- a/src/animation/controller.cpp
++++ b/src/animation/controller.cpp
+@@ -119,9 +119,9 @@ void animation::Controller::output_to_skeleton(float rest)
+     //TODO continue
+ //    throw std::runtime_error( "Controller::apply_skeleton() is unsupported" );
+ //
+-//    // Update Trajectory - part 2
+-//    unsigned int start = 0;
+-//    for(int i=trajectory->root_point_index+1; i<trajectory->_points.size(); i++) {
++    // Update Trajectory - part 2
++    unsigned int start = 0;
++    for(int i=trajectory->root_point_index+1; i<trajectory->_points.size(); i++) {
+ //        //ROOT	1		2		3		4		5
+ //        //.x....x.......x.......x.......x.......x
+ //        int index = i;
+@@ -188,11 +188,11 @@ void animation::Controller::output_to_skeleton(float rest)
+ //                        TrajectoryCorrection
+ //                )
+ //        );
+-//    }
+-//    start += TrajectoryDimOut*6;
+-//
+-//    // Compute Posture
+-//    for(int i=0; i<bones_n; i++) {
++    }
++    start += TrajectoryDimOut*6;
++
++    // Compute Posture
++    for(int i=0; i<bones_n; i++) {
+ //        Vector3f position = Vector3f(
+ //                get_output(start + i*joint_dim_out + 0),
+ //                get_output(start + i*joint_dim_out + 1),
+@@ -221,16 +221,16 @@ void animation::Controller::output_to_skeleton(float rest)
+ //        forwards[i] = forward;
+ //        ups[i] = up;
+ //        velocities[i] = velocity;
+-//    }
+-//    start += joint_dim_out*bones_n;
++    }
++    start += joint_dim_out*bones_n;
+ //
+ //    //Assign Posture
+ //    transform.position = next_root.get_position();
+ //    transform.rotation = next_root.get_rotation();
+-//    for(unsigned int i=0; i<bones_n; i++) {
++    for(unsigned int i=0; i<bones_n; i++) {
+ //        skeleton->bone(i).set_position(positions[i]);
+ //        skeleton->bone(i).set_rotation(Quaternionf::LookRotation(forwards[i], ups[i]));
+-//    }
++    }
+ }
+ 
+ void animation::Controller::set_input(unsigned int index, float value)

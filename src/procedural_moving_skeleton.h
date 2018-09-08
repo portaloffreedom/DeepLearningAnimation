@@ -2,14 +2,11 @@
 
 #include <Godot.hpp>
 #include <Skeleton.hpp>
+#include "animation/controller.h"
 
 class ProceduralMovingSkeleton: public godot::GodotScript<godot::Skeleton>
 {
     GODOT_CLASS(ProceduralMovingSkeleton)
-
-private:
-    float time_passed;
-    int bone_id;
 
 public:
     static void _register_methods();
@@ -17,5 +14,11 @@ public:
     ProceduralMovingSkeleton();
     ~ProceduralMovingSkeleton();
 
+    void _ready();
     void _process(float delta);
+
+private:
+    animation::Controller* anim_controller;
+    double time_passed;
+    int64_t bone_id;
 };

@@ -9,7 +9,12 @@ export_presets.cfg
 
 # cmake build folder
 /build/
+/cmake-build-debug/
 
 # scons build stuff
 *.os
 .sconsign.dblite
+
+# IDEs
+.idea/
+.vscode/
