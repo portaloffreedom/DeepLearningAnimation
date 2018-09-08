@@ -2,18 +2,25 @@
 
 Animation Test project with GDNative C++
 
-# Build instructions
-How to build your project. You don't have to reload the editor between builds.
+## Getting Started
 
-First you need to download and build a couple of extra dependencies:
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-## Godot Headers
-download godot headers in `src/godot_headers`
-from `https://github.com/GodotNativeTools/godot_headers`
+Clone this repository recursively:
+``` bash
+git clone --recursive https://github.com/portaloffreedom/DeepLearningAnimation.git
+```
 
-## Godot C++
-download godot-cpp in `src/godot-cpp`
-from `https://github.com/GodotNativeTools/godot-cpp`
+### Prerequisites
+
+The dependencies of AnimationTest are:
+```
+godot >= 3.0.6
+scons >= 3.0.1
+eigen >= 3.3.5
+```
+
+### Installing
 
 Compile godot-cpp:
 ```bash
@@ -22,7 +29,7 @@ $ godot --gdnative-generate-json-api godot_api.json
 $ scons platform=windows/linux/osx headers_dir=../godot_headers generate_bindings=yes target=release
 ```
 
-## CMake
+Compile this project:
 ```bash
 $ mkdir build && cd build
 $ cmake ..
@@ -30,5 +37,5 @@ $ make
 $ make install
 ```
 
-# Run
+## Run
 Open the project and run the example. A GDSCript loads the _simple_ example library and connects a _Button_ with the `get_data` function.
