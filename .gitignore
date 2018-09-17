@@ -8,11 +8,16 @@ export_presets.cfg
 # cmake build folder
 /build/
 /cmake-build-debug/
+/build-*/
 
 # scons build stuff
 *.os
 .sconsign.dblite
 
 # IDEs
+# Intellij
 .idea/
+# Visual Studio code
 .vscode/
+# QtCreator
+CMakeLists.txt.user

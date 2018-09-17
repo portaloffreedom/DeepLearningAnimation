@@ -4,10 +4,10 @@ GodotSkeleton::GodotSkeleton(godot::Skeleton &godot_skeleton)
     : _skeleton(godot_skeleton)
     , bones()
 {
-    int bones_n = this->bones_n();
+    unsigned int bones_n = this->bones_n();
     bones.reserve(bones_n);
 
-    for(int i=0; i< bones_n; i++)
+    for(unsigned int i=0; i< bones_n; i++)
     {
         bones.push_back(GodotBone(i, _skeleton));
     }

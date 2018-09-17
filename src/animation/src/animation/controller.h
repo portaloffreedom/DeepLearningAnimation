@@ -44,9 +44,9 @@ private:
     void set_input(unsigned int index, float value);
     float get_output(unsigned int index) const;
 
-    Trajectory::Point& get_sample(unsigned int index) const;
-    Trajectory::Point& get_previous_sample(unsigned int index) const;
-    Trajectory::Point& get_next_sample(unsigned int index) const;
+    const Trajectory::Point& get_sample(unsigned int index) const;
+    const Trajectory::Point& get_previous_sample(unsigned int index) const;
+    const Trajectory::Point& get_next_sample(unsigned int index) const;
 
 private:
     std::unique_ptr<engine::Skeleton> skeleton;

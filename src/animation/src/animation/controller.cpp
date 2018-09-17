@@ -1,5 +1,6 @@
 #include "controller.h"
 
+#include <algorithm>
 #include <Eigen/Dense>
 #include <animation/nn/models/pfnnmodel.h>
 
@@ -195,46 +196,46 @@ void Controller::output_to_skeleton(float rest)
     start += trajectory_dim_out*6;
 
     // Compute Posture
-    for(int i=0; i<bones_n; i++) {
-        Vector3f position = Vector3f(
-                get_output(start + i*joint_dim_out + 0),
-                get_output(start + i*joint_dim_out + 1),
-                get_output(start + i*joint_dim_out + 2)
-        ).get_relative_position_from(current_root);
+//    for(int i=0; i<bones_n; i++) {
+//        Vector3f position = Vector3f(
+//                get_output(start + i*joint_dim_out + 0),
+//                get_output(start + i*joint_dim_out + 1),
+//                get_output(start + i*joint_dim_out + 2)
+//        ).get_relative_position_from(current_root);
 
-        Vector3f forward = Vector3f(
-                get_output(start + i*joint_dim_out + 3),
-                get_output(start + i*joint_dim_out + 4),
-                get_output(start + i*joint_dim_out + 5)
-        ).normalized().get_relative_direction_from(current_root);
+//        Vector3f forward = Vector3f(
+//                get_output(start + i*joint_dim_out + 3),
+//                get_output(start + i*joint_dim_out + 4),
+//                get_output(start + i*joint_dim_out + 5)
+//        ).normalized().get_relative_direction_from(current_root);
 
-        Vector3f up = Vector3f(
-                get_output(start + i*joint_dim_out + 6),
-                get_output(start + i*joint_dim_out + 7),
-                get_output(start + i*joint_dim_out + 8)
-        ).normalized().get_relative_direction_from(currentRoot);
+//        Vector3f up = Vector3f(
+//                get_output(start + i*joint_dim_out + 6),
+//                get_output(start + i*joint_dim_out + 7),
+//                get_output(start + i*joint_dim_out + 8)
+//        ).normalized().get_relative_direction_from(currentRoot);
 
-        Vector3f velocity = Vector3f(
-                get_output(start + i*joint_dim_out + 9),
-                get_output(start + i*joint_dim_out + 10),
-                get_output(start + i*joint_dim_out + 11)
-        ).get_relative_direction_from(current_root);
+//        Vector3f velocity = Vector3f(
+//                get_output(start + i*joint_dim_out + 9),
+//                get_output(start + i*joint_dim_out + 10),
+//                get_output(start + i*joint_dim_out + 11)
+//        ).get_relative_direction_from(current_root);
 
-        positions[i] = Vector3f::Lerp(positions[i] + velocity / framerate, position, 0.5f);
-        forwards[i] = forward;
-        ups[i] = up;
-        velocities[i] = velocity;
-    }
-    start += joint_dim_out*bones_n;
+//        positions[i] = Vector3f::Lerp(positions[i] + velocity / framerate, position, 0.5f);
+//        forwards[i] = forward;
+//        ups[i] = up;
+//        velocities[i] = velocity;
+//    }
+//    start += joint_dim_out*bones_n;
 
-    //Assign Posture
-    transform = root_object_transform();
-    transform.position = next_root.get_position();
-    transform.rotation = next_root.get_rotation();
-    for(unsigned int i=0; i<bones_n; i++) {
-        skeleton->bone(i).set_position(positions[i]);
-        skeleton->bone(i).set_rotation(Quaternionf::LookRotation(forwards[i], ups[i]));
-    }
+//    //Assign Posture
+//    transform = root_object_transform();
+//    transform.position = next_root.get_position();
+//    transform.rotation = next_root.get_rotation();
+//    for(unsigned int i=0; i<bones_n; i++) {
+//        skeleton->bone(i).set_position(positions[i]);
+//        skeleton->bone(i).set_rotation(Quaternionf::LookRotation(forwards[i], ups[i]));
+//    }
 }
 
 void Controller::set_input(unsigned int index, float value)
@@ -257,17 +258,19 @@ unsigned int Controller::get_output_dim() const
     return this->model->y_dim();
 }
 
-Trajectory::Point& Controller::get_sample(unsigned int index) const
+const Trajectory::Point& Controller::get_sample(unsigned int index) const
 {
-    return trajectory->get_point(std::clamp(index*10, 0, trajectory->points().size()-1));
+    //unsigned int point_index = std::clamp(index*10, 0, trajectory->points().size()-1);
+    unsigned int point_index = std::min(index*10, static_cast<unsigned int>(trajectory->points().size()-1));
+    return trajectory->get_point(point_index);
 }
 
-Trajectory::Point& Controller::get_previous_sample(unsigned int index) const
+const Trajectory::Point& Controller::get_previous_sample(unsigned int index) const
 {
     return get_sample(index / 10);
 }
 
-Trajectory::Point& Controller::get_next_sample(unsigned int index) const
+const Trajectory::Point& Controller::get_next_sample(unsigned int index) const
 {
     if(index % 10 == 0) {
         return get_sample(index / 10);

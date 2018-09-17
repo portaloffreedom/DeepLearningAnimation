@@ -45,10 +45,10 @@ void ProceduralMovingSkeleton::_ready()
 
 void ProceduralMovingSkeleton::_process(float delta)
 {
-    time_passed += delta;
+    time_passed += static_cast<double>(delta);
 
     godot::Transform transform;
-    transform.translate(0, time_passed * 10, 0);
+    transform.translate(0, static_cast<float>(time_passed) * 10, 0);
 
     if (bone_id < 0) {
         bone_id = owner->find_bone("neck01");
