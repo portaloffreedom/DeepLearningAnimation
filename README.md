@@ -6,9 +6,9 @@ Animation Test project with GDNative C++
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-Clone this repository recursively:
+Clone this repository recursively (including submodules):
 ``` bash
-git clone --recursive https://github.com/portaloffreedom/DeepLearningAnimation.git
+git clone --recurse-submodules https://github.com/portaloffreedom/DeepLearningAnimation.git
 ```
 
 ### Prerequisites
