@@ -22,11 +22,10 @@ eigen >= 3.3.5
 
 ### Installing
 
-Compile godot-cpp:
+Generate godot_api.json:
 ```bash
 $ cd src/godot-cpp
 $ godot --gdnative-generate-json-api godot_api.json
-$ scons platform=windows/linux/osx headers_dir=../godot_headers generate_bindings=yes target=release
 ```
 
 Compile this project:
