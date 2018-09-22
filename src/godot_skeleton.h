@@ -51,6 +51,7 @@ private:
         virtual Vector3f get_transform_up() const override;
         virtual void set_transform_position(const Vector3f &position) override;
         virtual void set_rotation(const Quaternionf &rotation) override;
+        virtual void set_rotation(const Vector3f &direction, const Vector3f &axis) override;
     };
 
     godot::Skeleton &_skeleton;

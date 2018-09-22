@@ -23,11 +23,7 @@ public:
     Vector3f get_position() const;
 
     void set_rotation(const Quaternionf &rotation);
-    Eigen::Quaternionf get_rotation() const
-    {
-        throw std::runtime_error( "Matrix4f::get_rotation() is unsupported" );
-//         return Quaternion.LookRotation(matrix.GetColumn(2).normalized, matrix.GetColumn(1).normalized);
-    }
+    Quaternionf get_rotation() const;
 
     Vector3f get_right() const;
     Vector3f get_up() const;

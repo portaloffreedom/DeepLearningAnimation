@@ -4,6 +4,10 @@
 #include <Eigen/Dense>
 #include <animation/nn/models/pfnnmodel.h>
 
+// for sleep
+#include <chrono>
+#include <thread>
+
 using namespace animation;
 
 void Controller::update()
@@ -111,6 +115,7 @@ void Controller::output_to_skeleton(float rest)
     unsigned const joint_dim_out = 3;
     unsigned const bones_n = skeleton->bones_n();
     const float framerate = 60.0;
+    const Matrix4f& current_root = trajectory->root_point().get_transformation();
 
     Eigen::Vector3f root_motion(
             get_output(trajectory_dim_out*6 + joint_dim_out*bones_n + 0),
@@ -196,46 +201,52 @@ void Controller::output_to_skeleton(float rest)
     start += trajectory_dim_out*6;
 
     // Compute Posture
-//    for(int i=0; i<bones_n; i++) {
-//        Vector3f position = Vector3f(
-//                get_output(start + i*joint_dim_out + 0),
-//                get_output(start + i*joint_dim_out + 1),
-//                get_output(start + i*joint_dim_out + 2)
-//        ).get_relative_position_from(current_root);
+    for(unsigned int i=0; i<bones_n; i++) {
+        Vector3f position = Vector3f(
+                get_output(start + i*joint_dim_out + 0),
+                get_output(start + i*joint_dim_out + 1),
+                get_output(start + i*joint_dim_out + 2)
+        ).get_relative_position_from(current_root);
 
-//        Vector3f forward = Vector3f(
-//                get_output(start + i*joint_dim_out + 3),
-//                get_output(start + i*joint_dim_out + 4),
-//                get_output(start + i*joint_dim_out + 5)
-//        ).normalized().get_relative_direction_from(current_root);
+        Vector3f forward = Vector3f(
+                get_output(start + i*joint_dim_out + 3),
+                get_output(start + i*joint_dim_out + 4),
+                get_output(start + i*joint_dim_out + 5)
+        ).normalized().get_relative_direction_from(current_root);
 
-//        Vector3f up = Vector3f(
-//                get_output(start + i*joint_dim_out + 6),
-//                get_output(start + i*joint_dim_out + 7),
-//                get_output(start + i*joint_dim_out + 8)
-//        ).normalized().get_relative_direction_from(currentRoot);
+        Vector3f up = Vector3f(
+                get_output(start + i*joint_dim_out + 6),
+                get_output(start + i*joint_dim_out + 7),
+                get_output(start + i*joint_dim_out + 8)
+        ).normalized().get_relative_direction_from(current_root);
 
-//        Vector3f velocity = Vector3f(
-//                get_output(start + i*joint_dim_out + 9),
-//                get_output(start + i*joint_dim_out + 10),
-//                get_output(start + i*joint_dim_out + 11)
-//        ).get_relative_direction_from(current_root);
+        Vector3f velocity = Vector3f(
+                get_output(start + i*joint_dim_out + 9),
+                get_output(start + i*joint_dim_out + 10),
+                get_output(start + i*joint_dim_out + 11)
+        ).get_relative_direction_from(current_root);
 
-//        positions[i] = Vector3f::Lerp(positions[i] + velocity / framerate, position, 0.5f);
-//        forwards[i] = forward;
-//        ups[i] = up;
-//        velocities[i] = velocity;
-//    }
+        Eigen::Vector3f old_position = skeleton->bone(i).get_transform_position();
+        position = Vector3f::Lerp(old_position + velocity / framerate, position, 0.5f);
+        Quaternionf rotation = Quaternionf(Eigen::AngleAxisf(1.0, up));
+        //Quaternionf rotation = Quaternionf::LookRotation(forward, up);
+
+        skeleton->bone(i).set_transform_position(position);
+//        skeleton->bone(i).set_rotation(rotation);
+//        skeleton->bone(i).set_rotation(forward, up);
+    }
 //    start += joint_dim_out*bones_n;
 
-//    //Assign Posture
-//    transform = root_object_transform();
-//    transform.position = next_root.get_position();
-//    transform.rotation = next_root.get_rotation();
-//    for(unsigned int i=0; i<bones_n; i++) {
-//        skeleton->bone(i).set_position(positions[i]);
-//        skeleton->bone(i).set_rotation(Quaternionf::LookRotation(forwards[i], ups[i]));
-//    }
+    // Change entire body transform
+    //TODO maybe bone(0) is not correct and we want the entire object transform
+    //auto next_root = current_root;
+    //skeleton->bone(0).set_transform_position(next_root.get_position());
+    //TODO not implemented skeleton->bone(0).set_rotation(next_root.get_rotation());
+
+    // DEBUG STUFF
+    //skeleton->bone(0).set_transform_position(Vector3f(0,0,0));
+    //std::cout << "Animation step" << std::endl;
+    //std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 }
 
 void Controller::set_input(unsigned int index, float value)

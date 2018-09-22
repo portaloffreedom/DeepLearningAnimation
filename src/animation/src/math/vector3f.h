@@ -29,11 +29,13 @@ public:
     static Vector3f Right()   { return Vector3f(1, 0, 0); }
     static Vector3f Up()      { return Vector3f(0, 1, 0); }
     static Vector3f Forward() { return Vector3f(0, 0, 1); }
+    static Vector3f Lerp(const Eigen::Vector3f &a, const Eigen::Vector3f &b, float ratio);
 
     Vector3f get_relative_position_from(const Matrix4f &from) const;
     Vector3f get_relative_position_to(const Matrix4f &to) const;
     Vector3f get_relative_direction_from(const Matrix4f &from) const;
     Vector3f get_relative_direction_to(const Matrix4f &to) const;
+    Vector3f normalized() const;
 
     enum MirrorAxis {
         RIGHT,

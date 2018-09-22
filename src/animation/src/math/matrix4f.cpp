@@ -26,6 +26,11 @@ void Matrix4f::set_rotation(const Quaternionf& rotation)
     this->coeffRef(2,2) = forward.z();
 }
 
+Quaternionf Matrix4f::get_rotation() const {
+    throw std::runtime_error( "Matrix4f::get_rotation() is unsupported" );
+//         return Quaternion.LookRotation(matrix.GetColumn(2).normalized, matrix.GetColumn(1).normalized);
+}
+
 Vector3f Matrix4f::get_right() const
 {
     return Vector3f(
@@ -113,4 +118,3 @@ Vector3f Matrix4f::multiply_vector(const Vector3f& vector) const
               + this->coeffRef(2,2) * vector.z();
     return res;
 }
-

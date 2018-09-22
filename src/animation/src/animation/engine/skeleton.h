@@ -27,6 +27,7 @@ public:
 
         virtual void set_transform_position(const Vector3f &position) = 0;
         virtual void set_rotation(const Quaternionf &rotation) = 0;
+        virtual void set_rotation(const Vector3f &direction, const Vector3f &axis) = 0;
         void set_velocity(const Vector3f &velocity)
         { this->velocity = velocity; }
 

@@ -46,8 +46,8 @@ const std::string& GodotSkeleton::GodotBone::name() const
 
 Vector3f GodotSkeleton::GodotBone::get_transform_position() const
 {
-    //TODO skeleton.get_transform(index).
-    return Vector3f(0,0,0);
+    godot::Transform tr = skeleton.get_bone_pose(index);
+    return Vector3f(tr.origin.x, tr.origin.y, tr.origin.z);
 }
 
 Vector3f GodotSkeleton::GodotBone::get_transform_forward() const
@@ -64,13 +64,25 @@ Vector3f GodotSkeleton::GodotBone::get_transform_up() const
 void GodotSkeleton::GodotBone::set_transform_position(const Vector3f &position)
 {
     godot::Transform tr = skeleton.get_bone_pose(index);
-    tr.translate(godot::Vector3(position.x(), position.y(), position.z()));
+    tr.set_origin(godot::Vector3(position.x(), position.y(), position.z()));
     skeleton.set_bone_pose(index, tr);
 }
 
 void GodotSkeleton::GodotBone::set_rotation(const Quaternionf &rotation)
 {
     godot::Transform tr = skeleton.get_bone_pose(index);
-    tr.rotate(godot::Vector3(rotation.x(), rotation.y(), rotation.z()), rotation.w());
+    godot::Quat quat = godot::Quat(rotation.x(), rotation.y(), rotation.z(), rotation.w());
+    tr.basis = godot::Basis(quat);
     skeleton.set_bone_pose(index, tr);
+}
+
+void GodotSkeleton::GodotBone::set_rotation(const Vector3f &direction, const Vector3f &axis)
+{
+    godot::Transform tr = skeleton.get_bone_pose(index);
+//    var lookDir = get_node(lookTarget).get_transform().origin - t.origin
+    godot::Vector3 g_direction(direction.x(), direction.y(), direction.z());
+    godot::Vector3 g_axis(axis.x(), axis.y(), axis.z());
+    godot::Transform rotation_transform = tr.looking_at(g_direction, g_axis);
+    auto this_rotation = godot::Quat(rotation_transform.basis);
+    skeleton.set_bone_pose(index, godot::Transform(this_rotation,tr.origin));
 }
