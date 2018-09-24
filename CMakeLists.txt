@@ -50,6 +50,7 @@ add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/src/godot-cpp/include/Reference.hp
 
 set(ANIMATION_TEST_SRC
     src/gdlibrary.cpp # "Main" file
+    src/godotcompatibilitytools.h
     src/gdexample.cpp
     src/gdexample.h
     src/procedural_moving_skeleton.cpp
