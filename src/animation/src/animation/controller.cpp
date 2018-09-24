@@ -244,7 +244,7 @@ void Controller::output_to_skeleton(float rest)
     //TODO not implemented skeleton->bone(0).set_rotation(next_root.get_rotation());
 
     // DEBUG STUFF
-    //skeleton->bone(0).set_transform_position(Vector3f(0,0,0));
+    skeleton->bone(0).set_transform_position(Vector3f(0,0,0));
     //std::cout << "Animation step" << std::endl;
     //std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 }

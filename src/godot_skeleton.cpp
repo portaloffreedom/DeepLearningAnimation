@@ -47,24 +47,43 @@ const std::string& GodotSkeleton::GodotBone::name() const
 Vector3f GodotSkeleton::GodotBone::get_transform_position() const
 {
     godot::Transform tr = skeleton.get_bone_pose(index);
-    return Vector3f(tr.origin.x, tr.origin.y, tr.origin.z);
+    return Vector3f(tr.origin.x, tr.origin.z, tr.origin.y);//change from right to left-handed
 }
 
 Vector3f GodotSkeleton::GodotBone::get_transform_forward() const
 {
-    //TODO skeleton.get_transform(index).
-    return Vector3f(0,0,0);
+    godot::Transform tr = skeleton.get_bone_pose(index);
+    tr.set_origin(godot::Vector3());
+//    godot::Vector3 forward = tr.xform(godot::Vector3(0,0,1));
+    godot::Vector3 forward = tr.xform_inv(godot::Vector3(0,0,1));
+    return Vector3f(forward.x, forward.z, forward.y); //change from right to left-handed
+//    return Vector3f(0, 1, 0);
 }
 
 Vector3f GodotSkeleton::GodotBone::get_transform_up() const
 {
-    return Vector3f(0,0,0);
+//    godot::Transform tr = skeleton.get_bone_pose(index);
+//    godot::Quat quat(tr.basis);
+//    godot::Vector3 axis;
+//    real_t angle;
+//    //change from right to left-handed
+//    quat.get_axis_and_angle(axis, angle);
+//    return Vector3f(axis.x, axis.z, axis.y);
+
+//    godot::Transform tr = skeleton.get_bone_pose(index);
+//    tr.set_origin(godot::Vector3());
+////    godot::Vector3 up = tr.xform(godot::Vector3(0,1,0));
+//    godot::Vector3 up = tr.xform_inv(godot::Vector3(0,1,0));
+//    return Vector3f(up.x, up.z, up.y); //change from right to left-handed
+
+    return Vector3f(0, 0, 1);
 }
 
 void GodotSkeleton::GodotBone::set_transform_position(const Vector3f &position)
 {
     godot::Transform tr = skeleton.get_bone_pose(index);
-    tr.set_origin(godot::Vector3(position.x(), position.y(), position.z()));
+    //change from left to right-handed
+    tr.set_origin(godot::Vector3(position.x(), position.z(), position.y()));
     skeleton.set_bone_pose(index, tr);
 }
 
@@ -78,11 +97,18 @@ void GodotSkeleton::GodotBone::set_rotation(const Quaternionf &rotation)
 
 void GodotSkeleton::GodotBone::set_rotation(const Vector3f &direction, const Vector3f &axis)
 {
+    //change from left to right-handed
+    godot::Vector3 g_direction(direction.x(), direction.z(), direction.y());
+    godot::Vector3 g_axis(axis.x(), axis.z(), axis.y());
     godot::Transform tr = skeleton.get_bone_pose(index);
-//    var lookDir = get_node(lookTarget).get_transform().origin - t.origin
-    godot::Vector3 g_direction(direction.x(), direction.y(), direction.z());
-    godot::Vector3 g_axis(axis.x(), axis.y(), axis.z());
-    godot::Transform rotation_transform = tr.looking_at(g_direction, g_axis);
-    auto this_rotation = godot::Quat(rotation_transform.basis);
-    skeleton.set_bone_pose(index, godot::Transform(this_rotation,tr.origin));
+
+//    godot::Transform rotation_transform = tr.looking_at(g_direction, g_axis);
+//    auto this_rotation = godot::Quat(rotation_transform.basis);
+//    skeleton.set_bone_pose(index, godot::Transform(this_rotation,tr.origin));
+
+    godot::Transform new_transform;
+    new_transform.set_look_at(godot::Vector3(0,0,0), g_direction, g_axis);
+
+    tr.basis = new_transform.basis;
+    skeleton.set_bone_pose(index, tr);
 }
